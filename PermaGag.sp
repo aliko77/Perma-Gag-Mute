@@ -1,7 +1,6 @@
 #pragma semicolon 1
 
 #define DEBUG
-
 #define PLUGIN_AUTHOR "ali<.d"
 #define PLUGIN_VERSION "1.00"
 
@@ -251,20 +250,20 @@ public Action Command_Permaungag(int client, int args)
 	char strTarget[20];	
 	if (args < 1)
 	{
-		CPrintToChat(client, "[%s] {green}Kullanım: {darkred}!pungag {green}nick", tag1);
+		ReplyToCommand(client, "[%s] Kullanım: !pungag {green}nick", tag1);
 		return Plugin_Handled;
 	}
 	GetCmdArg(1, strTarget, sizeof(strTarget));
 	int target = FindTarget(client, strTarget, true);
-	if (permagag[target] == 0)
-	{
-		CPrintToChat(client, "[%s] {green}Bu oyuncunun zaten permagag'ı bulunmuyor.", tag1);
-		return Plugin_Handled;
-	}
 	if(target == -1)
 	{
-		CPrintToChat(client, "[%s] {green}Böyle bir hedef bulunamadı.", tag1);
+		
 		return Plugin_Handled;		
+	}	
+	if (permagag[target] == 0)
+	{
+		ReplyToCommand(client, "[%s] Bu oyuncunun zaten permagag'ı bulunmuyor.", tag1);
+		return Plugin_Handled;
 	}
 	char buffer[128];
 	char s_name[128];
@@ -281,6 +280,7 @@ public Action Command_Permaungag(int client, int args)
 			if (KvGetNum(kv, "PermaGag") == 1)
 			{
 				BaseComm_SetClientGag(target, false);
+				ReplyToCommand(client, "[%s] %N kullanıcının perma-gagı kaldırıldı.", tag1, target);
 				CPrintToChatAll("[%s] {orange}%N {green}adlı admin, {orange}%N {green}adlı kullanıcının perma-gag'ını kaldırdı.", tag1, client, target);
 				KvDeleteKey(kv,"PermaGag");
 				KvDeleteKey(kv,"Gag Atan Kisi");
@@ -301,20 +301,20 @@ public Action Command_Permaunmute(int client, int args)
 	char strTarget[20];	
 	if (args < 1)
 	{
-		CPrintToChat(client, "[%s] {green}Kullanım: {darkred}!punmute {green}nick", tag1);
+		ReplyToCommand(client, "[%s] Kullanım: {darkred}!punmute {green}nick", tag1);
 		return Plugin_Handled;
 	}
 	GetCmdArg(1, strTarget, sizeof(strTarget));
 	int target = FindTarget(client, strTarget, true);
-	if (permamute[target] == 0)
-	{
-		CPrintToChat(client, "[%s] {green}Bu oyuncunun zaten permamute'si bulunmuyor.", tag1);
-		return Plugin_Handled;
-	}
 	if(target == -1)
 	{
-		CPrintToChat(client, "[%s] {green}Böyle bir hedef bulunamadı.", tag1);
+		
 		return Plugin_Handled;		
+	}	
+	if (permamute[target] == 0)
+	{
+		ReplyToCommand(client, "[%s] Bu oyuncunun zaten permamute'si bulunmuyor.", tag1);
+		return Plugin_Handled;
 	}
 	char buffer[128];
 	char s_name[128];
@@ -331,6 +331,7 @@ public Action Command_Permaunmute(int client, int args)
 			if (KvGetNum(kv, "PermaMute") == 1)
 			{
 				BaseComm_SetClientMute(target, false);
+				ReplyToCommand(client, "[%s] %N kullanıcının perma-mutesi kaldırıldı.", tag1, target);
 				CPrintToChatAll("[%s] {orange}%N {green}adlı admin, {orange}%N {green}adlı kullanıcının perma-mute'sini kaldırdı.", tag1, client, target);
 				KvDeleteKey(kv,"PermaMute");
 				KvDeleteKey(kv,"Mute Atan Kisi");
@@ -352,22 +353,22 @@ public Action Command_Permagag(int client, int args)
 	char sebep[128];
 	if (args < 2)
 	{
-		CPrintToChat(client, "[%s] {green}Kullanım: {darkred}!pgag {green}nick {orange}sebep", tag1);
+		ReplyToCommand(client, "[%s] Kullanım: !pgag <nick> <sebep>", tag1);
 		return Plugin_Handled;
 	}
 	GetCmdArg(1, strTarget, sizeof(strTarget));
 	GetCmdArgString(sebep, sizeof(sebep)); 
 	ReplaceString(sebep, sizeof(sebep), strTarget, "", false);
 	int target = FindTarget(client, strTarget, true);
-	if (permagag[target] == 1)
-	{
-		CPrintToChat(client, "[%s] {green}Bu oyuncunun zaten permagag'ı bulunuyor.", tag1);
-		return Plugin_Handled;
-	}
 	if(target == -1)
 	{
-		CPrintToChat(client, "[%s] {green}Böyle bir hedef bulunamadı.", tag1);
+		
 		return Plugin_Handled;		
+	}	
+	if (permagag[target] == 1)
+	{
+		ReplyToCommand(client, "[%s] Bu oyuncunun zaten permagag'ı bulunuyor.", tag1);
+		return Plugin_Handled;
 	}
 	char buffer[128];
 	char buffern[128];
@@ -420,6 +421,7 @@ public Action Command_Permagag(int client, int args)
 	KvRewind(kv);
 	KeyValuesToFile(kv, mydata);
 	CloseHandle(kv);	
+	ReplyToCommand(client, "[%s] %N kullanıcısına perma-gag atıldı.", tag1, target);
 	CPrintToChatAll("[%s] {orange}%N {green}adlı admin, {orange}%N {green}adlı kullanıcıya perma gag attı.", tag1, client, target);
 	return Plugin_Continue;
 }
@@ -431,22 +433,22 @@ public Action Command_Permamute(int client, int args)
 	char sebep[128];
 	if (args < 2)
 	{
-		CPrintToChat(client, "[%s] {green}Kullanım: {darkred}!pmute {green}nick {orange}sebep", tag1);
+		ReplyToCommand(client, "[%s] Kullanım: !pmute <nick> <sebep>", tag1);
 		return Plugin_Handled;
 	}
 	GetCmdArg(1, strTarget, sizeof(strTarget));
 	int target = FindTarget(client, strTarget, true);
 	GetCmdArgString(sebep, sizeof(sebep)); 
-	ReplaceString(sebep, sizeof(sebep), strTarget, "", false);	
-	if (permamute[target] == 1)
-	{
-		CPrintToChat(client, "[%s] {green}Bu oyuncunun zaten perma-mute'si bulunuyor.", tag1);
-		return Plugin_Handled;
-	}
+	ReplaceString(sebep, sizeof(sebep), strTarget, "", false);
 	if(target == -1)
 	{
-		CPrintToChat(client, "[%s] {green}Böyle bir hedef bulunamadı.", tag1);
+		
 		return Plugin_Handled;		
+	}	
+	if (permamute[target] == 1)
+	{
+		ReplyToCommand(client, "[%s] Bu oyuncunun zaten perma-mute'si bulunuyor.", tag1);
+		return Plugin_Handled;
 	}
 	char buffer[128];
 	char buffern[128];
@@ -496,7 +498,8 @@ public Action Command_Permamute(int client, int args)
 	KvSetString(kv, "Mute Atan Kisi", buffern);
 	KvRewind(kv);
 	KeyValuesToFile(kv, mydata);
-	CloseHandle(kv);	
+	CloseHandle(kv);
+	ReplyToCommand(client, "[%s] %N kullanıcısına perma-mute atıldı.", tag1, target);
 	CPrintToChatAll("[%s] {orange}%N {green}adlı admin, {orange}%N {green}adlı kullanıcıya perma-mute attı.", tag1, client, target);
 	return Plugin_Continue;
 }
